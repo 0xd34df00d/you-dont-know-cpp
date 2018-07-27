@@ -7,3 +7,15 @@
   Further assume a field of that structure is updated. What would be the value of the padding?
 
 - What if `std::any` is implemented in terms of `std::type_info`. What problems might it have?
+
+- Is this code valid?
+  ```c
+  char arr[5] = { 0 };
+  auto pastEnd = arr + 10;
+  ```
+
+  What about this one?
+  ```c
+  char arr[5] = { 0 };
+  auto pastEnd = arr + 5;
+  ```
