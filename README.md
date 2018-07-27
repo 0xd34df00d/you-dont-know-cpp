@@ -4,7 +4,7 @@
   Hint2: consider `std::mutex`
 
 - Assume an instance of a `struct` is `memset`ed to zeros. What would be the value of the padding?
-  Further assume a field of that structure is updated. What would be the value of the padding?
+  Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
 
 - What if `std::any` is implemented in terms of `std::type_info`. What problems might it have?
 
