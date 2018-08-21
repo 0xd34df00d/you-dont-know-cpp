@@ -1,12 +1,12 @@
 - How is `return {};` different from `return T {};`? What types of `T` would behave differently?
   
   Hint: how does it depend on C++ standard version?
-  Hint2: consider `std::mutex`
+  Hint2: consider `std::mutex`.
 
-- Assume an instance of a `struct` is `memset`ed to zeros. What would be the value of the padding?
+- Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?
   Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
 
-- What if `std::any` is implemented in terms of `std::type_info`. What problems might it have?
+- Suppose `std::any` is implemented in terms of comparing `std::type_info`. What problems might it have?
 
 - Is this code valid?
   ```c
