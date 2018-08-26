@@ -1,4 +1,11 @@
-1. How is `return {};` different from `return T {};`? What types of `T` would behave differently?
+1. How are these two functions different?
+   ```c++
+   template<typename T>
+   T mkT1() { return {}; }
+   
+   template<typename T>
+   T mkT2() { return T {}; }
+   ```
   
    Hint: how does it depend on C++ standard version?\
    Hint2: consider `std::mutex`.
