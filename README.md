@@ -10,6 +10,23 @@
    Hint: how does it depend on C++ standard version?\
    Hint2: consider `std::mutex`.
 
+1. Is this code valid?
+   ```c++
+   struct Foo
+   {
+       int a;
+       
+       Foo() = delete;
+       Foo(int) = delete;
+   };
+   
+   int main()
+   {
+       Foo foo1 {};
+       Foo foo2 { 10 };
+   }
+   ```
+
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
 
