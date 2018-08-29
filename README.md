@@ -12,7 +12,7 @@
      Besides the obvious difference in handling of explicit vs nonexplicit default constructors, consider `std::mutex` and C++14 vs C++17.
    </details>
 
-1. Is this code valid?
+1. Which of the declarations in `main` are valid?
    ```c++
    struct Foo
    {
@@ -28,6 +28,10 @@
        Foo foo2 { 10 };
    }
    ```
+   <details>
+     <summary>Answer</summary>
+     Yes, in both cases uniform initialization is used. `Foo foo` and `Foo foo(10)` wouldn't be valid, though.
+   </details>
 
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
