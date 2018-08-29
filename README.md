@@ -12,7 +12,7 @@
      Besides the obvious difference in handling of explicit vs nonexplicit default constructors, consider `std::mutex` and C++14 vs C++17.
    </details>
 
-1. Which of the declarations in `main` are valid?
+1. Is this code valid?
    ```c++
    struct Foo
    {
