@@ -57,3 +57,42 @@
    char arr[5] = { 0 };
    auto pastEnd = arr + 5;
    ```
+1. Which lines are UB, if any?
+
+   ```c++
+   #include <iostream>
+
+   struct Foo1
+   {
+       int a;
+   };
+
+   struct Foo2
+   {
+       int a;
+       Foo2() = default;
+   };
+
+   struct Foo3
+   {
+       int a;
+
+       Foo3();
+   };
+
+   Foo3::Foo3() = default;
+
+   int main()
+   {
+       Foo1 foo11, foo12 {};
+       Foo2 foo21, foo22 {};
+       Foo3 foo31, foo32 {};
+
+       std::cout << foo11.a << std::endl;
+       std::cout << foo12.a << std::endl;
+       std::cout << foo21.a << std::endl;
+       std::cout << foo22.a << std::endl;
+       std::cout << foo31.a << std::endl;
+       std::cout << foo32.a << std::endl;
+   }
+   ```
