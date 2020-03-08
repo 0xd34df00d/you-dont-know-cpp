@@ -40,12 +40,6 @@
      Unspecified, unspecified.
    </details>
 
-1. Suppose `std::any` is implemented in terms of comparing `std::type_info`. What problems might it have?
-   <details>
-     <summary>Answer</summary>
-     `std::type_info` is "temporally unstable". The result of `typeof(T)` can be different for different evaluations of this expression. `std::type_info::hash_code` is stable, though.
-   </details>
-
 1. Is this code valid?
    ```c
    char arr[5] = { 0 };
@@ -57,6 +51,7 @@
    char arr[5] = { 0 };
    auto pastEnd = arr + 5;
    ```
+
 1. Which lines are UB, if any?
 
    ```c++
