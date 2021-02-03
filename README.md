@@ -37,6 +37,16 @@
      Starting with C++20, this somewhat counter-intuitive behaviour is fixed, and this code no longer compiles.
    </details>
 
+1. What does this code do, and on what features of C++17 does it rely?
+   ```c++
+   template<typename F, typename... Ts>
+   void foo(F f, Ts... ts)
+   {
+     int _;
+     (_ = ... = (f(ts), 0));
+   }
+   ```
+
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
    <details>
