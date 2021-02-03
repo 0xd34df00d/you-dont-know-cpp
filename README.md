@@ -32,7 +32,7 @@
      <summary>Answer</summary>
      Depends on the C++ version.
 
-     Up until C++17, both variables are initialized with uniform initialization. `Foo foo` and `Foo foo(10)` wouldn't be valid, though.
+     Up until C++17, both variables are initialized with aggregate initialization. `Foo foo` and `Foo foo(10)` wouldn't be valid, though.
 
      Starting with C++20, this somewhat counter-intuitive behaviour is fixed, and this code no longer compiles.
    </details>
