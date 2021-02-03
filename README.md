@@ -46,7 +46,17 @@
      (_ = ... = (f(ts), 0));
    }
    ```
+   <details>
+     <summary>Answer</summary>
+     1. It calls the function on the elements of the variadic pack in reverse order.
+     2. The features are left as an exercise for the reader.
+   </details>
+
    What problems does this code have, and what should be done to fix them?
+   <details>
+     <summary>Hint</summary>
+     <code>f</code> might return something with an overloaded <code>operator,</code>.
+   </details>
 
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
