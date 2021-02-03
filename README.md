@@ -46,6 +46,7 @@
      (_ = ... = (f(ts), 0));
    }
    ```
+   What problems does this code have, and what should be done to fix them?
 
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
