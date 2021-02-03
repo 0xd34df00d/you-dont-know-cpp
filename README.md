@@ -30,7 +30,11 @@
    ```
    <details>
      <summary>Answer</summary>
-     Yes, in both cases uniform initialization is used. `Foo foo` and `Foo foo(10)` wouldn't be valid, though.
+     Depends on the C++ version.
+
+     Up until C++17, both variables are initialized with uniform initialization. `Foo foo` and `Foo foo(10)` wouldn't be valid, though.
+
+     Starting with C++20, this somewhat counter-intuitive behaviour is fixed, and this code no longer compiles.
    </details>
 
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
