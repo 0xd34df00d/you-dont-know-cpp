@@ -58,6 +58,22 @@
      <code>f</code> might return something with an overloaded <code>operator,</code>.
    </details>
 
+1. Assume the following declarations:
+   ```c++
+   template <typename T>
+   concept Trivial = std::is_trivial_v<T>;
+
+   template <typename T, typename U>
+     requires Trivial<T>
+   void f(T t, U u) { std::cout << 1; }
+
+   template <typename T, typename U>
+     requires Trivial<T> && Trivial<U>
+   void f(T t, U u) { std::cout << 2; }
+   ```
+
+   Is `f(1, 2)` valid? If yes, what would it print?
+
 1. Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
    Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
    <details>
