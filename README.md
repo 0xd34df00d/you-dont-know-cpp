@@ -74,6 +74,10 @@
 
     Is `f(1, 2)` valid? If yes, what would it print?
 
+    1.1. What if `Trivial<T> && Trivial<U>` is replaced by `Trivial<T> && Trivial<T>` in the second definition?
+
+    1.2. What about `Trivial<T> || Trivial<U>`?
+
 1.  Assume an instance of a `struct` is `memset`ed to zeroes. What would be the value of the padding?\
     Further assume a field of that structure is updated. What would be the value of the padding after that field? After other fields?
     <details>
