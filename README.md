@@ -308,3 +308,20 @@ template<>
 int foo<int*>(int*) { return 2; }
 ```
 </details>
+
+---
+
+## What does this print?
+```cpp
+struct Evil {
+  auto begin() { return std::counted_iterator("Library", 7); }
+  friend auto begin(Evil&) { return std::counted_iterator("Core", 4); }
+  friend auto end(Evil&) { return std::default_sentinel; }
+};
+
+Evil rg;
+for (char c : rg) { putchar(c); }
+std::ranges::for_each(rg, [](char c) { putchar(c); });
+```
+
+_borrowed from Arthur O'Dwyer's blog, [where](https://quuxplusone.github.io/blog/2024/12/09/foreach-versus-for/) he also considers this in more detail_
