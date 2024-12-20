@@ -224,3 +224,33 @@ Try doing that to `foo3` and you'll get an UB, since you'll be using an object w
 The pointer returned by `foo3` references the _local_ array `str` which is initialized by _copying_ that same string.
 This array is local to `foo3` and its lifetime ends once the function has returned, hence the UB.
 </details>
+
+While modern compilers output a warning, what's a reliable and somewhat general way to check functions like this?
+
+<details>
+<summary>Hint</summary>
+`constexpr` helps.
+</details>
+
+<details>
+<summary>Answer</summary>
+Mark all these functions `constexpr` and try using them in a constant evaluated context, like `static_assert`:
+```cpp
+static_assert(foo1()[0] == 'G');
+static_assert(foo2()[0] == 'G');
+static_assert(foo3()[0] == 'G');
+```
+
+Say, clang outputs:
+```
+error: non-constant condition for static assertion
+   22 | static_assert(foo3()[0] == 'G');
+      |               ~~~~~~~~~~^~~~~~
+error: accessing 'str' outside its lifetime
+   22 | static_assert(foo3()[0] == 'G');
+      |               ~~~~~~~~^
+note: declared here
+   16 |     const char str[] = "Gotta love C++";
+      |                ^~~
+```
+</details>
