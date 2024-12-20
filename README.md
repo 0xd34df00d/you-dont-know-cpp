@@ -216,6 +216,7 @@ Why? What's the crucial difference between these functions? Is there any differe
 
 <details>
 <summary>Answer</summary>
+
 Accessing any element of the "array" returned by `foo1` and `foo2` is fine.
 Try doing that to `foo3` and you'll get an UB, since you'll be using an object whose lifetime has ended!
 
@@ -229,11 +230,13 @@ While modern compilers output a warning, what's a reliable and somewhat general 
 
 <details>
 <summary>Hint</summary>
+
 `constexpr` helps.
 </details>
 
 <details>
 <summary>Answer</summary>
+
 Mark all these functions `constexpr` and try using them in a constant evaluated context, like `static_assert`:
 ```cpp
 static_assert(foo1()[0] == 'G');
@@ -252,5 +255,56 @@ error: accessing 'str' outside its lifetime
 note: declared here
    16 |     const char str[] = "Gotta love C++";
       |                ^~~
+```
+</details>
+
+---
+
+## Fun with fun templates
+
+What does `bar1` print?
+```cpp
+template<typename T>
+int foo(T) { return 1; }
+
+template<>
+int foo(int*) { return 2; }
+
+template<typename T>
+int foo(T*) { return 3; }
+
+void bar1()
+{
+    int test;
+    std::cout << foo(&test) << foo<int>(&test) << foo<int*>(&test) << '\n';
+}
+```
+
+What if we reorder the definitions, as in `bar2`?
+```cpp
+template<typename T>
+int foo(T) { return 1; }
+
+template<typename T>
+int foo(T*) { return 3; }
+
+template<>
+int foo(int*) { return 2; }
+
+void bar2()
+{
+    int test;
+    std::cout << foo(&test) << foo<int>(&test) << foo<int*>(&test) << '\n';
+}
+```
+
+Can we still specialize the first template after we've introduced the second one?
+<details>
+<summary>Answer</summary>
+
+Yep:
+```cpp
+template<>
+int foo<int*>(int*) { return 2; }
 ```
 </details>
