@@ -178,3 +178,49 @@ Starting with C++20, an `x` object and its `int` subobjects are implicitly creat
 
 It always has been valid C code, though. 
 </details>
+
+---
+
+## Is using this function dangerous?
+```cpp
+auto foo1()
+{
+    return "Gotta love C++";
+}
+```
+
+What about this one?
+```cpp
+auto foo2()
+{
+    const char *str = "Gotta love C++";
+    return str;
+}
+```
+
+This one?
+```cpp
+auto foo3()
+{
+    const char str[] = "Gotta love C++";
+    return str;
+}
+```
+
+<details>
+<summary>Answer</summary>
+Nope, nope, yep.
+</details>
+
+Why? What's the crucial difference between these functions? Is there any difference in their types?
+
+<details>
+<summary>Answer</summary>
+Accessing any element of the "array" returned by `foo1` and `foo2` is fine.
+Try doing that to `foo3` and you'll get an UB, since you'll be using an object whose lifetime has ended!
+
+`foo1` and `foo2` return a pointer to a string that is, roughly speaking, allocated and stored somewhere in the executable at compile time.
+
+The pointer returned by `foo3` references the _local_ array `str` which is initialized by _copying_ that same string.
+This array is local to `foo3` and its lifetime ends once the function has returned, hence the UB.
+</details>
