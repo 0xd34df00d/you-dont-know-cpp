@@ -1,3 +1,25 @@
+## When is this function safe or unsafe to use?
+
+```c++
+template<auto V>
+const auto& foo() { return V; }
+```
+
+<details>
+<summary>Answer</summary>
+It's safe for class types and unsafe for, say, `int`s.
+For some reason the standard threats them differently, so
+
+```c++
+const auto& v1 = foo<42>();       // bad! dangling reference
+
+struct S { int val; };
+const auto& v2 = foo<S { 42 }>(); // fine!
+```
+
+Finding the corresponding clauses in the standard is left as an exercise for the reader.
+</details>
+
 ## How are these two functions different?
 ```c++
 template<typename T>
