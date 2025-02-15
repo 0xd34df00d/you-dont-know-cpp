@@ -1,3 +1,42 @@
+## Maps of non-copyable, non-movable types
+
+Suppose you have a type that's not copyable nor movable, like
+```c++
+struct ThreadedResource
+{
+  std::unique_ptr<Resource> handle;
+  std::mutex mutex; // mutex isn't move-constructible nor move-assignable nor copyable
+};
+```
+Suppose further you need a hashmap from, say, `int`s to `ThreadedResource`,
+with a value potentially missing.
+
+One way is express this is `std::unordered_map<int, std::shared_ptr<ThreadedResource>>`:
+a null pointer denotes a missing value.
+This is annoying, though, since it has an extra memory allocation and an extra indirection.
+
+Can you do better? In your approach, how would you insert the elements into the map?
+
+<details>
+<summary>Potential answer</summary>
+
+One way to do this is to use `std::optional`
+(which also expresses the notion of "no value" more explicitly).
+
+Insertions are annoying, though, being a rare example of having both
+`std::piecewise_construct` (for the map's `emplace`) and `std::in_place` (for the `std::optional`) in the same expression:
+
+```c++
+auto handle = ...;
+map.emplace(std::piecewise_construct,
+            std::forward_as_tuple(locale),
+            std::forward_as_tuple(std::in_place, std::move(handle))
+```
+
+Note that the `ThreadedResource` fields are ordered so that `mutex` goes after the `handle`,
+so there's no need to pass an initializer to the `mutex`, and it all just works out.
+</details>
+
 ## When is this function safe or unsafe to use?
 
 ```c++
