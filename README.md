@@ -1,3 +1,18 @@
+## `constexpr` string literals
+
+Does this compile?
+
+```cpp
+constexpr auto f() { return "f"; }
+constexpr auto g() { return "g"; }
+
+static_assert(f() == f());
+static_assert(f() != g());
+```
+
+Here the **answer** is easy:
+it's an open question, discussed in [CWG #2765](https://www.open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#2765).
+
 ## How are these two functions different?
 ```c++
 template<typename T>
