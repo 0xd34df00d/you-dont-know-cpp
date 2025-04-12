@@ -5,12 +5,12 @@ Is this valid?
 ```cpp
 struct Foo
 {
-    struct Nested
-    {
-        bool field = true;
-    };
+  struct Nested
+  {
+    bool field = true;
+  };
 
-    void doSmth(const Nested& = Nested{});
+  void doSmth(const Nested& = Nested{});
 };
 ```
 
@@ -22,12 +22,12 @@ Is this valid?
 ```cpp
 struct Base
 {
-    virtual const Base* getFoo() { return nullptr; }
+  virtual const Base* getFoo() { return nullptr; }
 };
 
 struct Derived : Base
 {
-    const Derived* getFoo() override { return nullptr; }
+  const Derived* getFoo() override { return nullptr; }
 };
 ```
 
@@ -40,12 +40,12 @@ What about this?
 ```cpp
 struct Base
 {
-    virtual const Base* getFoo() { return nullptr; }
+  virtual const Base* getFoo() { return nullptr; }
 };
 
 struct Derived : Base
 {
-    Base* getFoo() override { return nullptr; }
+  Base* getFoo() override { return nullptr; }
 };
 ```
 
@@ -59,12 +59,12 @@ Now, this is surely valid too, right?
 ```cpp
 struct Base
 {
-    virtual const int* getFoo() { return 0; }
+  virtual const int* getFoo() { return 0; }
 };
 
 struct Derived : Base
 {
-    int* getFoo() override { return 0; }
+  int* getFoo() override { return 0; }
 };
 ```
 
