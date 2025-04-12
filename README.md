@@ -1,3 +1,61 @@
+## Some covariance
+
+Is this valid?
+```cpp
+struct Base
+{
+    virtual const Base* getFoo() { return nullptr; }
+};
+
+struct Derived : Base
+{
+    const Derived* getFoo() override { return nullptr; }
+};
+```
+
+<details>
+<summary>Answer</summary>
+Sure: this is covariance in action.
+</details>
+
+What about this?
+```cpp
+struct Base
+{
+    virtual const Base* getFoo() { return nullptr; }
+};
+
+struct Derived : Base
+{
+    Base* getFoo() override { return nullptr; }
+};
+```
+
+<details>
+<summary>Answer</summary>
+Yep, also good: in some sense, `Base*` is a subtype of `const Base*`.
+And, of course, `Derived*` would've worked too.
+</details>
+
+Now, this is surely valid too, right?
+```cpp
+struct Base
+{
+    virtual const int* getFoo() { return 0; }
+};
+
+struct Derived : Base
+{
+    int* getFoo() override { return 0; }
+};
+```
+
+<details>
+<summary>Answer</summary>
+Nope: non-class types play by different rules, because otherwise the language would've been too consistent
+(see [class.virtual]/8).
+</details>
+
 ## `constexpr` string literals
 
 Does this compile?
