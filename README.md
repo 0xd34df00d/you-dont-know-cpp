@@ -1,3 +1,21 @@
+## Default arguments
+
+Is this valid?
+
+```cpp
+struct Foo
+{
+    struct Nested
+    {
+        bool field = true;
+    };
+
+    void doSmth(const Nested& = Nested{});
+};
+```
+
+Answer: see [this bugzilla entry](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=88165).
+
 ## Some covariance
 
 Is this valid?
