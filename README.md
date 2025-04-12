@@ -20,12 +20,12 @@ Is this valid?
 ```cpp
 struct Base
 {
-  virtual const Base* getFoo() { return nullptr; }
+  virtual Base* getFoo() { return nullptr; }
 };
 
 struct Derived : Base
 {
-  const Derived* getFoo() override { return nullptr; }
+  Derived* getFoo() override { return nullptr; }
 };
 ```
 
