@@ -148,6 +148,24 @@ Note that the `ThreadedResource` fields are ordered so that `mutex` goes after t
 so there's no need to pass an initializer to the `mutex`, and it all just works out.
 </details>
 
+## Incrementing enums
+
+Is this valid?
+
+```cpp
+enum E { A, B };
+
+E& operator++(E& e)
+{
+    // some implementation
+}
+```
+
+<details>
+<summary>Answer</summary>
+Yes.
+</details>
+
 ## How are these two functions different?
 ```c++
 template<typename T>
