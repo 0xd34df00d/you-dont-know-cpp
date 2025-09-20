@@ -182,11 +182,24 @@ struct Bar
 };
 ```
 
+How about this?
+
+```cpp
+struct Bar
+{
+    virtual void* operator new(size_t sz)
+    {
+        return ::operator new(sz);
+    }
+};
+```
+
 <details>
 <summary>Answer</summary>
 Of course not: `operator new` is implicitly static.
 How could it be otherwise?
-This operator is called before the object of the corresponding type is created.
+This operator is called before the object is created,
+hence there are no data members and no vtbl to use.
 </details>
 
 ## How are these two functions different?
