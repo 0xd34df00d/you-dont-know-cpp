@@ -166,6 +166,29 @@ E& operator++(E& e)
 Yes.
 </details>
 
+## `operator new`
+
+Is this valid?
+
+```cpp
+struct Bar
+{
+    int n;
+
+    void* operator new(size_t sz)
+    {
+        return ::operator new(sz + n);
+    }
+};
+```
+
+<details>
+<summary>Answer</summary>
+Of course not: `operator new` is implicitly static.
+How could it be otherwise?
+This operator is called before the object of the corresponding type is created.
+</details>
+
 ## How are these two functions different?
 ```c++
 template<typename T>
