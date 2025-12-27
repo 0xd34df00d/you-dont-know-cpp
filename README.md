@@ -1,3 +1,85 @@
+## `requires`-constrained return types
+
+```cpp
+template<typename... Args>
+struct Dummy
+{
+  int value;
+
+  void foo()
+    requires(sizeof... (Args) == 0)
+  {
+  }
+
+  std::optional<Args...> foo()
+    requires(sizeof... (Args) == 1)
+  {
+    return {};
+  }
+
+  std::optional<std::tuple<Args...>> foo()
+    requires(sizeof... (Args) > 1)
+  {
+    return {};
+  }
+};
+
+int main()
+{
+  Dummy<> d { 42 };
+}
+```
+
+`Dummy<>` does not typecheck. _Do you expect_ it to not typecheck? Why it does not typecheck and how to fix it?
+
+<details>
+<summary>Hint</summary>
+
+The signatures of the members are instantiated even if the members are not used, and if they are `requires`'d or SFINAEd away.
+</details>
+
+<details>
+<summary>Solution constraint</summary>
+
+No, you are not allowed to hide it under `auto` + deduced type.
+For the actual type in the actual use case that prompted writing this,
+the return type then needs to be written in every branch, and it's annoying,
+and also reduces discoverability of the API.
+</details>
+
+<details>
+<summary>Answer(s)</summary>
+
+There's a couple of approaches, which are really a variation of each other.
+
+First, `Dummy` _itself_ can be specialized/constrained based on the number of arguments.
+The common data and other functions (if any) are moved to some `DummyBase`, which `Dummy` derives.
+In recent C++ this even keeps braced-initialization!
+
+Second, the type argument of `std::optional` itself can be similarly specialized.
+</details>
+
+<details>
+<summary>Bonus question</summary>
+
+Some usual approaches don't work:
+* Making `foo` itself a template with a default template parameter, like
+  ```
+  template<typename... MyArgs = Args...>
+    requires(sizeof...(MyArgs) == 1)
+  std::optional<MyArgs...> foo()
+  ```
+  is not well-formed since packs can't have default values.
+* Using something like `template<typename T = std::tuple_element_t<0, std::tuple<Args...>>`
+  and then having `std::optional<T>` in the "unary" `foo()` case:
+  `std::tuple_element_t` hard-errors on out-of-bounds index
+  instead of merely being SFINAEd away.
+* A C++26 variation of that with pack indexing with `template<typename T = Args...[0]>`:
+  out-of-bounds in pack indexing is also somehow a hard error instead of being SFINAEd away.
+
+Given this, what can you say about orthogonality and well-thought-ness of C++?
+</details>
+
 ## Is this valid?
 
 ```cpp
