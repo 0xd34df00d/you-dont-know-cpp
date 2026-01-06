@@ -611,3 +611,31 @@ std::ranges::for_each(rg, [](char c) { putchar(c); });
 ```
 
 _borrowed from Arthur O'Dwyer's blog, [where](https://quuxplusone.github.io/blog/2024/12/09/foreach-versus-for/) he also considers this in more detail_
+
+---
+
+## Are these functions different?
+```cpp
+int f() {
+    int x = 0;
+    return *(&x - 1 + 1);
+}
+
+int g() {
+    int x = 0;
+    return *(&x + 1 - 1);
+}
+```
+
+<details>
+<summary>Hint</summary>
+What does the C++ Standard say about operator associativity? 
+</details>
+
+<details>
+<summary>Answer</summary>
+
+Function `f` is UB, but function `g` is fine.
+
+_borrowed from  Daniil Zhuravlev's blog, [where](https://wtrtwr.by/posts/cpp-fun-fact-5/) he explains what languge in the C++ Standard makes it UB and shows a proof that function `f` is fishy_
+</details>
