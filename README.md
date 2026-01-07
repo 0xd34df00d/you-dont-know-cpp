@@ -637,5 +637,5 @@ What does the C++ Standard say about operator associativity?
 
 Function `f` is UB, but function `g` is fine.
 
-_borrowed from  Daniil Zhuravlev's blog, [where](https://wtrtwr.by/posts/cpp-fun-fact-5/) he explains what languge in the C++ Standard makes it UB and shows a proof that function `f` is fishy_
+_borrowed from  Daniil Zhuravlev's blog, [where](https://wtrtwr.by/posts/cpp-fun-fact-5/) he explains what language in the C++ Standard makes it UB and shows a proof that function `f` is fishy_
 </details>
