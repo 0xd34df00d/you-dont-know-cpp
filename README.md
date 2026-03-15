@@ -43,6 +43,50 @@ The easiest fix is to parenthesize the return statement: `return (fields... [Idx
 The "why" part is left as an exercise for the reader in the great art of chasing through the Standard references.
 </details>
 
+## Specialization fun
+
+You have this in your header:
+```cpp
+template<typename>
+constexpr auto IsSimpleContainer = [] { struct Undefined {}; return Undefined {}; } ();
+
+template<typename T>
+constexpr bool IsSimpleContainer<std::vector<T>> = true;
+
+// vectors of bools are very special!
+template<>
+constexpr bool IsSimpleContainer<std::vector<bool>> = false;
+
+template<typename T>
+constexpr bool IsSimpleContainer<std::deque<T>> = true;
+```
+
+How can this bite you?
+
+<details>
+<summary>Answer</summary>
+
+It's alright if only one TU includes this header.
+But if more than one does, the linker might complain
+on a CWG 2387-conforming implementation:
+a fully specialized variable template (the one for `std::vector<bool>`)
+is a variable _definition_, so all the usual variable linkage rules apply.
+
+The fix is to add `inline` to that line only:
+```cpp
+template<>
+inline constexpr bool IsSimpleContainer<std::vector<bool>> = false;
+```
+
+Also, `constexpr` doesn't help: unlike `constexpr` functions,
+`constexpr` variables are not implicitly `inline`.
+<details>
+<summary>Bonus points for…</summary>
+
+…immediately thinking "unless they are `static` class data members, of course!" when reading the previous sentence.
+</details>
+</details>
+
 ## `requires`-constrained return types
 
 ```cpp
