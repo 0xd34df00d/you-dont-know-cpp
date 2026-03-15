@@ -1,3 +1,48 @@
+## Assigning to references
+
+Does this work? If it doesn't, why and what's the easiest fix?
+```cpp
+constexpr decltype(auto) Get()
+{
+  static int longLiving = 0;
+  auto& ref = longLiving;
+  return ref;
+}
+
+void DoFoo()
+{
+  Get() = 42;
+}
+```
+
+What about this one? If this one doesn't, why and what's the easiest fix?
+```cpp
+struct Foo { int a; };
+
+template<int Idx, typename T>
+constexpr decltype(auto) Get(T& f)
+{
+  auto& [...fields] = f;  // C++26 structured binding introducing a pack
+  return fields... [Idx];
+}
+
+void DoFoo()
+{
+  Foo f;
+  Get<0>(f) = 42;
+}
+```
+
+<details>
+<summary>Answers</summary>
+
+Yes; no.
+
+The easiest fix is to parenthesize the return statement: `return (fields... [Idx]);`.
+
+The "why" part is left as an exercise for the reader in the great art of chasing through the Standard references.
+</details>
+
 ## `requires`-constrained return types
 
 ```cpp
