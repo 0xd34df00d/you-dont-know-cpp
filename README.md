@@ -43,6 +43,56 @@ The easiest fix is to parenthesize the return statement: `return (fields... [Idx
 The "why" part is left as an exercise for the reader in the great art of chasing through the Standard references.
 </details>
 
+## Defaulted equality
+
+Does this work?
+```cpp
+#include <compare>
+
+// note no operator==
+struct Foo
+{
+    int a;
+    std::strong_ordering operator<=>(const Foo&) const = default;
+};
+
+bool testFoo(Foo f1, Foo f2)
+{
+    return f1 == f2;
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+Yes, it does. `operator==` gets synthesized by the compiler thanks to the `default`ed `operator<=>`.
+</details>
+
+Does this work?
+```cpp
+struct Bar
+{
+    int a;
+    std::strong_ordering operator<=>(const Bar&) const;
+};
+
+std::strong_ordering Bar::operator<=>(const Bar&) const = default;
+
+bool testBar(Bar b1, Bar b2)
+{
+    return b1 == b2;
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+Nope.
+
+The `operator<=>` has to be _declared_ as `default`ed _inside_ the class
+for the compiler to synthesize `operator==`.
+</details>
+
 ## Specialization fun
 
 You have this in your header:
