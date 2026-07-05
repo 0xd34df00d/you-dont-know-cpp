@@ -1,3 +1,31 @@
+## Deducing `this` fun
+
+If you take a pointer `auto ptr = &Foo::g` (`g` being a member function taking no arguments), can you always use that pointer as `(foo.*ptr)()` for some `Foo foo`?
+
+Or, somewhat equivalently: what are the types of `&Foo::f` and `&Foo::g` here?
+```cpp
+struct Foo
+{
+  void f();
+  void g(this Foo&);
+};
+```
+
+<details>
+<summary>Answer</summary>
+
+The type of `&Foo::f` is `void (Foo::*)()`.\
+The type of `&Foo::g` is `void (*)(Foo&)`.
+
+Hence, this code is not well-formed:
+```cpp
+auto ptr = &Foo::g;
+Foo foo;
+(foo.*ptr)();
+```
+even though `foo.f()` and `foo.g()` are both well-formed.
+</details>
+
 ## Assigning to references
 
 Does this work? If it doesn't, why and what's the easiest fix?
