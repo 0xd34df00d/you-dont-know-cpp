@@ -615,10 +615,10 @@ int main()
 ```c++
 struct X { int a, b; };
 X *make_x() {
-    X *p = (X*)malloc(sizeof(struct X));
-    p->a = 1;
-    p->b = 2;
-    return p;
+    X *x = (X*)malloc(sizeof(struct X));
+    x->a = 1;
+    x->b = 2;
+    return x;
 }
 ```
 <details>
@@ -629,7 +629,7 @@ Up until C++17, neither an `x` object nor an `int` subobjects are created, and t
 
 Starting with C++20, an `x` object and its `int` subobjects are implicitly created, and this code is valid.
 
-It always has been valid C code, though. 
+It always has been valid C code, though (assuming `typedef struct X X;` after the `struct` definition).
 </details>
 
 ---
