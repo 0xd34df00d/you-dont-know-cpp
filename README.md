@@ -26,6 +26,81 @@ Foo foo;
 even though `foo.f()` and `foo.g()` are both well-formed.
 </details>
 
+## Callbacks fun
+
+Is this UB?
+```cpp
+struct Tracker
+{
+  int count = 0;
+
+  // assume CallbackRegistry is something like Qt or Boost signals/slots,
+  // or, well, a callback registry that invokes the callback at some later point
+  explicit Tracker(CallbackRegistry& registry)
+  {
+    registry.add([this] { ++count; });
+  }
+};
+
+int main()
+{
+  CallbackRegistry registry;
+  const Tracker t { registry };
+  registry.invokeCallbacks();
+}
+```
+
+Or, as a simpler and a self-contained example, is this UB?
+```cpp
+struct Tracker
+{
+  int count = 0;
+  Tracker *self = this;
+};
+
+int main ()
+{
+  const Tracker tracker {};
+  return ++tracker.self->count;
+}
+```
+
+<details>
+<summary>Answer</summary>
+
+Yes, it is, although neither gcc nor clang (tested with 16.2 and 23 respectively) catch this
+neither at run-time nor at compile-time even with `-Wall -Wextra -pedantic -fsanitize=undefined`.
+And the problem is that a `const` object is being modified.
+
+To observe the UB at runtime, throwing in some more magic tokens helps:
+declaring `tracker` as
+```cpp
+  static constinit const Tracker tracker {};
+```
+makes the program segfault.
+Here, the compiler places `tracker` in the read-only memory (`.data.rel.ro` to be precise,
+which is `mprotect`ed after initialization due to relocations needed for the `this` pointer),
+and modifying read-only memory makes it have a bad time.
+
+To observe the UB at compile-time, the usual trick of `constexpr` evaluation helps: something like
+```cpp
+static_assert([] { const Tracker t; return ++t.self->count; } ());
+```
+results in, to quote clang:
+```
+error: static assertion expression is not an integral constant expression
+    |     static_assert([] { const Tracker t; return ++t.self->count; } ());
+    |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note: modification of object of const-qualified type 'const int' is not allowed in a constant expression
+    |     static_assert([] { const Tracker t; return ++t.self->count; } ());
+    |                                                ^
+```
+
+All in all, `const` semantics are only enforced _after_ the constructor finishes (per [class.ctor.general]/5).
+In a sense, `this` is implicitly `const_cast`ed from the `const`-qualified type while in the constructor,
+and this `const`-less pointer is valid only for the duration of the constructor.
+</details>
+
 ## Assigning to references
 
 Does this work? If it doesn't, why and what's the easiest fix?
