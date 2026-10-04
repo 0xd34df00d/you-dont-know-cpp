@@ -1,3 +1,12 @@
+Most of these questions are distilled and reduced versions of something
+I've seen in real code bases (unless copied from third parties,
+in which case look out for a reference).
+So, for bonus points and extra fun, assume there's a bunch of red herrings flying around,
+and it's also 3 a.m.
+
+---
+---
+
 ## Deducing `this` fun
 
 If you take a pointer `auto ptr = &Foo::g` (`g` being a member function taking no arguments), can you always use that pointer as `(foo.*ptr)()` for some `Foo foo`?
