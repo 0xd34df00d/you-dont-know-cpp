@@ -26,6 +26,71 @@ Foo foo;
 even though `foo.f()` and `foo.g()` are both well-formed.
 </details>
 
+## More fun
+
+Given
+```cpp
+struct PromiseBase
+{
+  int await_transform(int val) { return val; }
+
+  template<typename Self, typename T>
+  auto await_transform(this Self&&, T val) { return val * 2; }
+};
+
+struct Promise : PromiseBase {};
+
+Promise p;
+```
+what does `p.await_transform(1)` return?
+
+<details>
+<summary>Answer</summary>
+
+`2`
+</details>
+
+Why?
+
+<details>
+<summary>Hint</summary>
+
+What is the type of the object parameter in each overload?
+Does the usual "all else being equal, templates lose" tiebreaker heuristic apply?
+</details>
+
+<details>
+<summary>Answer</summary>
+
+Consider the call site.
+The actual object argument has type `Promise&` (or, to be more precise, an lvalue of type `Promise`).
+The first overload's (implicit) object parameter has type `PromiseBase&`.
+The second, templated overload's (explicit) object parameter is deduced to have type `Promise&`
+(matching the actual object argument type).
+The `Promise&` ⇝ `PromiseBase&` is a _conversion_,
+so the first overload loses even before the "templates are worse" tiebreaker has a chance to kick in
+([over.ics.ref]/1).
+
+Of course, called on a `PromiseBase b`, the overload set "returns" `1`, as expected.
+</details>
+
+Now change the derived class to
+```cpp
+struct Promise : PromiseBase
+{
+  using PromiseBase::await_transform;
+};
+```
+— what does `p.await_transform(1)` return?
+
+<details>
+<summary>Answer</summary>
+
+`1`, of course.
+`using`-declaration in a derived class bumps the (implicit) object parameter's type to that of the derived class
+([over.match.funcs.general]/4).
+</details>
+
 ## Callbacks fun
 
 Is this UB?
