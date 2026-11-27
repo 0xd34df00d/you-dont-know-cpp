@@ -485,6 +485,26 @@ static_assert(f() != g());
 Here the **answer** is easy:
 it's an open question, discussed in [CWG #2765](https://www.open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#2765).
 
+## Nice formatting you got there
+
+Is this valid?
+
+```cpp
+const int a = 10;
+const int b = 09;
+const int c = 08;
+const int d = 007;
+
+static_assert(b + 1 == a);
+static_assert(d + 1 == c);
+```
+
+<details>
+<summary>Answer</summary>
+
+No: leading zeroes mean `09` and `08` are octal literals, and neither `9` nor `8` exist in octal. `007` is fine, as is `07`, of course. 
+</details>
+
 ## When is this function safe or unsafe to use?
 
 ```c++
@@ -494,6 +514,7 @@ const auto& foo() { return V; }
 
 <details>
 <summary>Answer</summary>
+
 It's safe for class types and unsafe for, say, `int`s.
 For some reason the standard threats them differently, so
 
